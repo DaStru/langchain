@@ -82,16 +82,17 @@ ANSWER_FORMULATOR_PROMPT = PromptTemplate(
 _PLOT_GENERATOR_TEMPLATE ="""You are a python expert. Given the initial question of a user and the result of the execution of a derived KQL query, generate python code to plot the results with plotly.
 
 Classify the question of the user in one of the following cases and deduce the chart style:
-- Chart for showing change over time: Bar Chart, Line Chart, Box Plot
+- Chart for showing change over time: Column Chart, Line Chart, Box Plot
 - Charts for showing part-to-whole composition: Pie Chart, Stacked Bar Chart, Stacked Area Chart
 - Charts for looking at how data is distributed: Bar Chart, Histogramm, Violin Plot, Box Plot
 - Charts for comparing values between groups: Dot Plot, Line Chart, Grouped Bar Chart, Funnel Chart
 - Charts for observing relationships between variables: Scatter Plot, Bubble Chart, Heatmap, Dual-axis Plot
 - Charts for looking at geographical data: Choropleth, Cartograms
+- Charts for showing the details of many items: Table
 
 If you think that there is no practical way to display all the information contained in the result or the question isn't inculded in the above cases, simply create code that outputs the result as a pandas table.
 
-If necessary, for example in case of consecutive time series, adjust the order of the data of the result.
+If necessary, for example in case of consecutive time data, adjust the order of the data of the result.
 
 You don't have to include the result in the final code, instead put the placeholder "__insert_result_here__" where the result has to be inserted afterwards.
 
