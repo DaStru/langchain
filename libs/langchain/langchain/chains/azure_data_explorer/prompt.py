@@ -23,7 +23,11 @@ KQL_QUERY_PROMPT = PromptTemplate(
 
 _QUERY_CHECKER_TEMPLATE = """
 {kql_query}
-Double check the Kusto Query Language (KQL) query above for common mistakes, including:
+
+The Kusto Query Language (KQL) query above generated the following error:
+{query_error}
+
+Double check the Kusto Query Language (KQL) query for common mistakes, including:
 - Data type mismatch in predicates
 - Properly quoting identifiers
 - Using the correct number of arguments for functions
@@ -42,7 +46,7 @@ Don't remove the table at the beginning of the query!
 KQL Query: """
 
 QUERY_CHECKER_PROMPT = PromptTemplate(
-    input_variables = ["kql_query"], 
+    input_variables = ["kql_query", "query_error"], 
     template = _QUERY_CHECKER_TEMPLATE
 )
 
@@ -73,4 +77,33 @@ Answer: """
 ANSWER_FORMULATOR_PROMPT = PromptTemplate(
     input_variables=["input", "kql_result"],
     template=_ANSWER_FORMULATOR_TEMPLATE
+)
+
+_PLOT_GENERATOR_TEMPLATE ="""You are a python expert. Given the initial question of a user and the result of the execution of a derived KQL query, generate python code to plot the results with plotly.
+
+Classify the question of the user in one of the following cases and deduce the chart style:
+- Chart for showing change over time: Bar Chart, Line Chart, Box Plot
+- Charts for showing part-to-whole composition: Pie Chart, Stacked Bar Chart, Stacked Area Chart
+- Charts for looking at how data is distributed: Bar Chart, Histogramm, Violin Plot, Box Plot
+- Charts for comparing values between groups: Dot Plot, Line Chart, Grouped Bar Chart, Funnel Chart
+- Charts for observing relationships between variables: Scatter Plot, Bubble Chart, Heatmap, Dual-axis Plot
+- Charts for looking at geographical data: Choropleth, Cartograms
+
+If you think that there is no practical way to display all the information contained in the result or the question isn't inculded in the above cases, simply create code that outputs the result as a pandas table.
+
+If necessary, for example in case of consecutive time series, adjust the order of the data of the result.
+
+You don't have to include the result in the final code, instead put the placeholder "__insert_result_here__" where the result has to be inserted afterwards.
+
+Here is the initial user question: {input}
+
+Here is the result of the execution: {kql_result_data}
+
+Output the final python code only.
+
+Python code: """
+
+PLOT_GENERATOR_PROMPT = PromptTemplate(
+    input_variables=["input", "kql_result_data"],
+    template=_PLOT_GENERATOR_TEMPLATE
 )
