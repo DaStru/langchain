@@ -259,7 +259,7 @@ class AzureDataExplorerWrapper(BaseModel):
                 return f"Error: {','.join(missing_tables)} do not exist in database {database}. Please check again which tables exist."
             
             #Create information according to Rajkumar et al, 2022
-            output_str.append(f"DATABASE: {database} \n\n")
+            output_str += f"DATABASE: {database} \n\n"
             for table in tables:
                 try:
                     #Add create command for table
