@@ -78,7 +78,7 @@ class KQLQueryGeneratorChain(Chain):
     llm_chain: LLMChain
     adx_wrapper: AzureDataExplorerWrapper = Field(default_factory=AzureDataExplorerWrapper)
     database_name: str
-    top_k: int = 5
+    top_k: int = 100
     input_key_names: List[str] = ["input", "table_names"]
     output_key: str = "kql_query"
 

@@ -5,7 +5,7 @@ _KQL_QUERY_TEMPLATE = """You are a Kuso Query Language (KQL) expert. Given an in
 Unless the user specifies in the question a specific number of examples to obtain, query for at most {top_k} results using the limit clause as per KQL. You can order the results to return the most informative data in the database.
 Never query for all columns from a table. You must query only the columns that are needed to answer the question.
 Pay attention to use only the column names you can see in the tables below. Be careful to not query for columns that do not exist. Also, pay attention to which column is in which table.
-Pay attention to use now() function to get the current date, if the question involves "today".
+Use the now() function to get the current date, but only if the question involves "today" or strongly related words.
 Don't forget to put the chosen table at the beginning of the query.
 
 Only use the following tables:
@@ -67,6 +67,8 @@ TABLE_SELECTION_PROMPT = PromptTemplate(
 
 _ANSWER_FORMULATOR_TEMPLATE = """You are a KQL expert. Given the initial question of a user and the result of the execution of a derived KQL query, formulate a appropriate answer.
 Try to include all the information that is present in the result in the answer.
+Try to derive a logical structure from the content and insert the new line character (\\n) in appropriate places. If the answer format is a bullet list, formulate your answer like: \\n- "BulletPoint1" \\n- "BulletPoint2" ...
+Important: Insert the new line character for each new line only once and not with multiple backslashes!
 
 Initial user question: {input}
 
@@ -92,7 +94,7 @@ Classify the question of the user in one of the following cases and deduce the c
 
 If you think that there is no practical way to display all the information contained in the result or the question isn't inculded in the above cases, simply create code that outputs the result as a pandas table.
 
-If necessary, for example in case of consecutive time data, adjust the order of the data of the result.
+If the result contains data describing a point in time, then sort the results according to the point in time.
 
 You don't have to include the result in the final code, instead put the placeholder "__insert_result_here__" where the result has to be inserted afterwards.
 
